@@ -79,7 +79,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
   }, [])
 
   useEffect(() => {
-    if (page !== 'gateway') return
+    if (page !== 'gateway' || intro) return
     const studio = document.getElementById('panel-studio')
     const prod = document.getElementById('panel-prod')
     if (!studio || !prod) return
@@ -93,7 +93,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
       studio.removeEventListener('mouseenter', onSE); studio.removeEventListener('mouseleave', onSL)
       prod.removeEventListener('mouseenter', onPE); prod.removeEventListener('mouseleave', onPL)
     }
-  }, [page])
+  }, [page, intro])
 
   const placeholderStudio = [
     { _id:'p1', title:'Eclipse VFX', client:'Canal+', category:'Visual Effects', year:'2024', format:'4K HDR' },
