@@ -91,7 +91,10 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     }
   }, [page])
 
-  const studioList = studioProjects.length > 0 ? studioProjects : [
+  const [modal, setModal] = useState(null) // { url, title }
+
+  const openModal = (url, title) => { if (url) setModal({ url, title }) }
+  const closeModal = () => setModal(null)
     { _id:'1', title:'Eclipse VFX', client:'Canal+', category:'Visual Effects', year:'2024', format:'4K HDR' },
     { _id:'2', title:'Songe d\'une Nuit', client:'Arte', category:'Color Grading', year:'2024', format:'DCP' },
     { _id:'3', title:'Urban Decay', client:'Nike', category:'Motion Design', year:'2023', format:'Social / OOH' },
@@ -336,7 +339,13 @@ export default function Home({ studioProjects, productions, teamMembers, clients
         .lg-val{font-family:var(--M);font-size:11px;letter-spacing:.08em;color:var(--cream);opacity:.7}
         .lg-sep{height:1px;background:rgba(255,255,255,.06)}
         .lg-text{font-family:var(--M);font-weight:300;font-size:12px;letter-spacing:.05em;line-height:2;color:var(--muted)}
-        @media(max-width:768px){
+        .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:flex;align-items:center;justify-content:center;cursor:none;animation:fadeIn .3s ease}
+        .modal-inner{position:relative;width:90vw;max-width:1200px}
+        .modal-close{position:absolute;top:-2.5rem;right:0;font-family:var(--M);font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:none;transition:color .3s;padding:0}
+        .modal-close:hover{color:var(--w)}
+        .modal-video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
+        .modal-video iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .modal-title{font-family:var(--D);font-weight:600;font-size:clamp(14px,1.5vw,20px);letter-spacing:-.02em;text-transform:uppercase;color:var(--w);margin-top:1.2rem}
           .sg-item,.pg-item{grid-column:1/-1!important}
           .s-head{flex-direction:column;gap:1rem;align-items:flex-start}
           nav{padding:1.2rem 1.5rem}
@@ -429,7 +438,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
           </div>
           <div className="sg">
             {studioList.map((p,i) => (
-              <div key={p._id} className="sg-item" data-hover>
+              <div key={p._id} className="sg-item" data-hover onClick={() => openModal(p.videoLoopUrl, p.title)} style={{cursor: p.videoLoopUrl ? 'none' : 'default'}}>
                 <div className="sg-thumb">
                   {p.thumbnail
                     ? <img src={p.thumbnail} alt={p.title} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
@@ -591,6 +600,22 @@ export default function Home({ studioProjects, productions, teamMembers, clients
 
       {/* LEGAL */}
       {page === 'legal' && <LegalPage setPage={setPage} />}
+      {/* VIDEO MODAL */}
+      {modal && (
+        <div className="modal-backdrop" onClick={closeModal}>
+          <div className="modal-inner" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeModal}>✕ &nbsp;Close</button>
+            <div className="modal-video">
+              <iframe
+                src={modal.url.includes('?') ? modal.url + '&autoplay=1' : modal.url + '?autoplay=1'}
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <div className="modal-title">{modal.title}</div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
