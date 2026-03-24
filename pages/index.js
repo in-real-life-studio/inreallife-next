@@ -34,15 +34,21 @@ export async function getStaticProps() {
       _id, title, subtitle, type, framerateEmbedUrl
     }
   `)
+  const expertise = await client.fetch(`
+    *[_type == "expertise"] | order(order asc) {
+      _id, number, title, description
+    }
+  `)
+
   return {
-    props: { studioProjects, productions, teamMembers, clients, showreels },
+    props: { studioProjects, productions, teamMembers, clients, showreels, expertise },
     revalidate: 30
   }
 }
 
 const statusLabel = { released: 'Released', post: 'Post-Production', dev: 'In Development' }
 
-export default function Home({ studioProjects, productions, teamMembers, clients, showreels }) {
+export default function Home({ studioProjects, productions, teamMembers, clients, showreels, expertise }) {
   const [page, setPage] = useState('gateway')
   const [intro, setIntro] = useState(true)
   const [modal, setModal] = useState(null)
@@ -125,6 +131,14 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     { _id:'7', name:'Dior', type:'brand' }, { _id:'8', name:'Nike', type:'brand' },
     { _id:'9', name:'Omega', type:'brand' }, { _id:'10', name:'Brand 04', type:'brand' },
     { _id:'11', name:'Brand 05', type:'brand' }, { _id:'12', name:'Brand 06', type:'brand' },
+  ]
+
+  const expertiseList = expertise.length > 0 ? expertise : [
+    {_id:'1', number:'01', title:'Creative Direction', description:'Strong visual concepts built around clear storytelling — from research and moodboards to final vision.'},
+    {_id:'2', number:'02', title:'Production', description:'Full production management — scouting, casting, crew coordination, on-set oversight at any scale.'},
+    {_id:'3', number:'03', title:'Post-Production & VFX', description:"Creative vision meets technical precision — immersive, high-quality films meeting today's standards."},
+    {_id:'4', number:'04', title:'Immersive & XR', description:'XR, VR, motion capture and interactive technologies as narrative mediums for new creative territories.'},
+    {_id:'5', number:'05', title:'AI & Innovation', description:'AI integrated as a creative tool — guided by human intent, used to explore, iterate, and produce.'},
   ]
 
   const generalReel = showreels.find(s => s.type === 'general') || { framerateEmbedUrl: 'https://framerate.tv/embed/f25fba94-20aa-4a22-8692-2a990683f769?primary_color=%2523ffffff&track_color=%2523ffffff&theme=minimal', title: 'General Showreel', subtitle: 'Production · Direction · Post' }
@@ -274,11 +288,11 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     .ab-client{background:var(--k);font-family:var(--D);font-weight:700;font-size:clamp(11px,1vw,14px);letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:1.6rem 1.2rem;transition:color .4s,background .4s;cursor:none;text-align:center}
     .ab-client:hover{color:var(--w);background:#080808}
     .ab-team{padding:5rem 5vw;border-bottom:1px solid rgba(255,255,255,.06)}
-    .ab-team-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2.5rem;align-items:start}
-    .ab-member{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:none}
-    .ab-member-photo-wrap{width:clamp(90px,9vw,130px);height:clamp(90px,9vw,130px);border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.08);flex-shrink:0;transition:border-color .4s}
+    .ab-team-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2.5rem;align-items:start;justify-items:center}
+    .ab-member{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:none;width:100%}
+    .ab-member-photo-wrap{width:clamp(90px,9vw,130px);height:clamp(90px,9vw,130px);border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.08);flex-shrink:0;transition:border-color .4s;position:relative}
     .ab-member:hover .ab-member-photo-wrap{border-color:var(--gold)}
-    .ab-member-photo{width:100%;height:100%;background:#0d0d0d;display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.76,0,.24,1)}
+    .ab-member-photo{width:100%;height:100%;background:#0d0d0d;display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.76,0,.24,1);position:absolute;inset:0}
     .ab-member:hover .ab-member-photo{transform:scale(1.08)}
     .ab-member-photo::after{content:'+';font-family:var(--M);font-size:20px;color:rgba(255,255,255,.12);font-weight:300}
     .ab-member-name{font-family:var(--D);font-weight:600;font-size:clamp(11px,1vw,13px);letter-spacing:-.005em;text-transform:uppercase;color:var(--w);margin-top:1rem;line-height:1.2;transition:color .3s}
@@ -522,19 +536,13 @@ export default function Home({ studioProjects, productions, teamMembers, clients
           <div className="ab-services">
             <div className="ab-tag"><span></span>Our Expertise</div>
             <div className="ab-services-grid">
-              {[
-                {n:'01',t:'Creative Direction',d:'Strong visual concepts built around clear storytelling — from research and moodboards to final vision.'},
-                {n:'02',t:'Production',d:'Full production management — scouting, casting, crew coordination, on-set oversight at any scale.'},
-                {n:'03',t:'Post-Production & VFX',d:"Creative vision meets technical precision — immersive, high-quality films meeting today's standards."},
-                {n:'04',t:'Immersive & XR',d:'XR, VR, motion capture and interactive technologies as narrative mediums for new creative territories.'},
-                {n:'05',t:'AI & Innovation',d:'AI integrated as a creative tool — guided by human intent, used to explore, iterate, and produce.'},
-              ].map(s => (
-                <div key={s.n} className="ab-service">
+              {expertiseList.map(s => (
+                <div key={s._id} className="ab-service">
                   <div className="ab-service-img"><div className="ab-service-img-inner"><span className="ab-service-img-label">Image</span></div></div>
                   <div className="ab-service-body">
-                    <div className="ab-service-num">{s.n}</div>
-                    <div className="ab-service-title">{s.t}</div>
-                    <div className="ab-service-desc">{s.d}</div>
+                    <div className="ab-service-num">{s.number}</div>
+                    <div className="ab-service-title">{s.title}</div>
+                    <div className="ab-service-desc">{s.description}</div>
                   </div>
                 </div>
               ))}
