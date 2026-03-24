@@ -346,17 +346,61 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     .modal-video iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
     .modal-title{font-family:var(--D);font-weight:600;font-size:clamp(14px,1.5vw,20px);letter-spacing:-.02em;text-transform:uppercase;color:var(--w);margin-top:1.2rem}
     @media(max-width:768px){
+      html,body{overflow:auto}
+      .cur{display:none}
+      .screen{height:auto;min-height:100vh}
+      #s-intro{height:100vh}
+      #s-gateway{height:100vh}
+      .gw-panel{padding:6vw}
+      .gw-studio{clip-path:none!important;position:relative;height:50vh;display:flex}
+      .gw-prod{clip-path:none!important;position:relative;height:50vh;display:flex;justify-content:flex-start}
+      .gw-svg-line{display:none}
+      .gw-title{font-size:clamp(28px,8vw,48px)}
+      .gw-tag,.gw-sub,.gw-cta{opacity:1!important;transform:none!important}
+      .gw-iframe-wrap{opacity:0.4!important}
+      nav{padding:1rem 1.5rem}
+      .nav-name{font-size:11px}
+      .nav-right{gap:1rem}
+      .nav-btn{font-size:10px;letter-spacing:.12em}
+      .page{height:auto;min-height:100vh;overflow-y:auto}
+      .s-head{padding:5rem 5vw 2rem;flex-direction:column;gap:1rem;align-items:flex-start}
+      .s-meta{text-align:left}
+      .s-title{font-size:clamp(48px,12vw,80px)}
+      .sg,.pg{grid-template-columns:1fr;gap:2px;padding:2px}
       .sg-item,.pg-item{grid-column:1/-1!important}
-      .s-head{flex-direction:column;gap:1rem;align-items:flex-start}
-      nav{padding:1.2rem 1.5rem}
-      .ab-manifesto{grid-template-columns:1fr}
-      .ab-reels-grid{grid-template-columns:1fr}
-      .ab-services-grid{grid-template-columns:repeat(2,1fr)}
-      .ab-clients-grid{grid-template-columns:repeat(3,1fr)}
-      .ab-team-grid{grid-template-columns:repeat(3,1fr)}
+      .sg-thumb,.pg-thumb{aspect-ratio:16/9!important}
+      .sg-info,.pg-info{opacity:1!important;transform:none!important}
+      .sg-ov,.pg-ov{opacity:1!important}
+      .ab-manifesto{grid-template-columns:1fr;gap:2rem;padding:3rem 5vw}
+      .ab-lead{font-size:clamp(22px,6vw,36px)}
+      .ab-reels{padding:3rem 5vw}
+      .ab-reels-grid{grid-template-columns:1fr;gap:2rem}
+      .ab-services{padding:3rem 5vw}
+      .ab-services-grid{grid-template-columns:1fr 1fr;gap:2px}
+      .ab-clients{padding:3rem 5vw}
+      .ab-clients-split{grid-template-columns:1fr;gap:2rem}
+      .ab-clients-divider{display:none}
+      .ab-clients-grid{grid-template-columns:repeat(2,1fr)}
+      .ab-team{padding:3rem 5vw}
+      .ab-team-grid{gap:2rem 4vw}
+      .ab-member-name,.ab-member-role,.ab-member-email{white-space:normal}
+      .ab-closing{padding:4rem 5vw}
       .ct-wrap{grid-template-columns:1fr}
-      .ct-left{border-right:none;border-bottom:1px solid rgba(255,255,255,.06)}
+      .ct-left{border-right:none;border-bottom:1px solid rgba(255,255,255,.06);padding:3rem 5vw}
+      .ct-right{padding:3rem 5vw}
+      .ct-submit{cursor:pointer}
+      .lg-wrap{padding:3rem 5vw 4rem}
       .lg-row{grid-template-columns:1fr;gap:.3rem}
+      footer{flex-direction:column;gap:1.5rem;text-align:center;padding:2rem 5vw}
+      .ft-r{flex-wrap:wrap;justify-content:center;gap:1.5rem}
+      button,.ft-a,.nav-btn{cursor:pointer}
+      .modal-inner{width:95vw}
+      .modal-close{top:-2rem;font-size:12px}
+    }
+    @media(max-width:480px){
+      .ab-services-grid{grid-template-columns:1fr}
+      .ab-clients-grid{grid-template-columns:repeat(2,1fr)}
+      .gw-title{font-size:clamp(24px,9vw,40px)}
     }
   `
 
@@ -364,7 +408,8 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     <>
       <Head>
         <title>In Real Life</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="theme-color" content="#000000" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
       </Head>
