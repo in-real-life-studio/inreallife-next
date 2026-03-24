@@ -52,6 +52,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
   const [page, setPage] = useState('gateway')
   const [intro, setIntro] = useState(true)
   const [modal, setModal] = useState(null)
+  const [menuOpen, setMenuOpen] = useState(false)
   const curRef = useRef(null)
 
   const openModal = (url, title) => { if (url) setModal({ url, title }) }
@@ -345,6 +346,14 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     .modal-video{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000}
     .modal-video iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
     .modal-title{font-family:var(--D);font-weight:600;font-size:clamp(14px,1.5vw,20px);letter-spacing:-.02em;text-transform:uppercase;color:var(--w);margin-top:1.2rem}
+    .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:200}
+    .burger-line{display:block;width:22px;height:1px;background:var(--w);transition:transform .3s,opacity .3s}
+    .burger-line.open:nth-child(1){transform:translateY(6px) rotate(45deg)}
+    .burger-line.open:nth-child(2){opacity:0}
+    .burger-line.open:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+    .mobile-menu{display:none;position:fixed;inset:0;background:var(--k);z-index:150;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+    .mobile-menu-btn{font-family:var(--D);font-weight:700;font-size:clamp(24px,7vw,40px);letter-spacing:-.02em;text-transform:uppercase;color:var(--w);background:none;border:none;cursor:pointer;transition:color .3s}
+    .mobile-menu-btn:hover{color:var(--gold)}
     @media(max-width:768px){
       html,body{overflow:auto}
       .cur{display:none}
@@ -358,10 +367,10 @@ export default function Home({ studioProjects, productions, teamMembers, clients
       .gw-title{font-size:clamp(28px,8vw,48px)}
       .gw-tag,.gw-sub,.gw-cta{opacity:1!important;transform:none!important}
       .gw-iframe-wrap{opacity:0.4!important}
-      nav{padding:1rem 1.5rem}
-      .nav-name{font-size:11px}
-      .nav-right{gap:1rem}
-      .nav-btn{font-size:10px;letter-spacing:.12em}
+      nav{padding:1rem 1.5rem;position:relative}
+      .nav-right{display:none}
+      .burger{display:flex}
+      .mobile-menu{display:flex}
       .page{height:auto;min-height:100vh;overflow-y:auto}
       .s-head{padding:5rem 5vw 2rem;flex-direction:column;gap:1rem;align-items:flex-start}
       .s-meta{text-align:left}
@@ -382,7 +391,8 @@ export default function Home({ studioProjects, productions, teamMembers, clients
       .ab-clients-divider{display:none}
       .ab-clients-grid{grid-template-columns:repeat(2,1fr)}
       .ab-team{padding:3rem 5vw}
-      .ab-team-grid{gap:2rem 4vw}
+      .ab-team-grid{flex-direction:column;align-items:center;gap:2.5rem}
+      .ab-member{width:100%;max-width:280px}
       .ab-member-name,.ab-member-role,.ab-member-email{white-space:normal}
       .ab-closing{padding:4rem 5vw}
       .ct-wrap{grid-template-columns:1fr}
@@ -399,7 +409,6 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     }
     @media(max-width:480px){
       .ab-services-grid{grid-template-columns:1fr}
-      .ab-clients-grid{grid-template-columns:repeat(2,1fr)}
       .gw-title{font-size:clamp(24px,9vw,40px)}
     }
   `
@@ -429,9 +438,14 @@ export default function Home({ studioProjects, productions, teamMembers, clients
 
       {page !== 'gateway' && (
         <nav>
-          <button className="nav-brand" onClick={() => setPage('gateway')}>
+          <button className="nav-brand" onClick={() => { setPage('gateway'); setMenuOpen(false) }}>
             <img src="/LOGO_IRL_WHITE.png" alt="IRL" className="nav-logo" />
             <span className="nav-name">In Real Life <em>·</em> {page === 'studio' ? 'Studio' : page === 'prod' ? 'Productions' : page === 'about' ? 'About' : page === 'contact' ? 'Contact' : 'Legal'}</span>
+          </button>
+          <button className="burger" onClick={() => setMenuOpen(o => !o)} aria-label="Menu">
+            <span className={`burger-line${menuOpen ? ' open' : ''}`}/>
+            <span className={`burger-line${menuOpen ? ' open' : ''}`}/>
+            <span className={`burger-line${menuOpen ? ' open' : ''}`}/>
           </button>
           <div className="nav-right">
             {['studio','prod','about','contact'].map(p => (
@@ -441,6 +455,16 @@ export default function Home({ studioProjects, productions, teamMembers, clients
             ))}
             <button className="nav-btn" onClick={() => setPage('gateway')}>← Home</button>
           </div>
+          {menuOpen && (
+            <div className="mobile-menu">
+              {['studio','prod','about','contact'].map(p => (
+                <button key={p} className="mobile-menu-btn" onClick={() => { setPage(p); setMenuOpen(false) }}>
+                  {p === 'studio' ? 'Studio' : p === 'prod' ? 'Productions' : p === 'about' ? 'About' : 'Contact'}
+                </button>
+              ))}
+              <button className="mobile-menu-btn" onClick={() => { setPage('gateway'); setMenuOpen(false) }}>← Home</button>
+            </div>
+          )}
         </nav>
       )}
 
