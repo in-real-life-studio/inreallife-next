@@ -95,6 +95,8 @@ export default function Home({ studioProjects, productions, teamMembers, clients
 
   const openModal = (url, title) => { if (url) setModal({ url, title }) }
   const closeModal = () => setModal(null)
+
+  const studioList = studioProjects.length > 0 ? studioProjects : [
     { _id:'1', title:'Eclipse VFX', client:'Canal+', category:'Visual Effects', year:'2024', format:'4K HDR' },
     { _id:'2', title:'Songe d\'une Nuit', client:'Arte', category:'Color Grading', year:'2024', format:'DCP' },
     { _id:'3', title:'Urban Decay', client:'Nike', category:'Motion Design', year:'2023', format:'Social / OOH' },
