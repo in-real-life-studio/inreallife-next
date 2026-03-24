@@ -96,15 +96,20 @@ export default function Home({ studioProjects, productions, teamMembers, clients
   const openModal = (url, title) => { if (url) setModal({ url, title }) }
   const closeModal = () => setModal(null)
 
-  const studioList = studioProjects.length > 0 ? studioProjects : [
-    { _id:'1', title:'Eclipse VFX', client:'Canal+', category:'Visual Effects', year:'2024', format:'4K HDR' },
-    { _id:'2', title:'Songe d\'une Nuit', client:'Arte', category:'Color Grading', year:'2024', format:'DCP' },
-    { _id:'3', title:'Urban Decay', client:'Nike', category:'Motion Design', year:'2023', format:'Social / OOH' },
-    { _id:'4', title:'Fractures', client:'Netflix', category:'Post-Production', year:'2024', format:'Dolby Vision' },
-    { _id:'5', title:'Lumière Noire', client:'Dior', category:'Comp & VFX', year:'2023', format:'4K' },
-    { _id:'6', title:'Territories', client:'Arte/ZDF', category:'Grade & Sound', year:'2024', format:'HDR10+' },
-    { _id:'7', title:'Deep Blue', client:'Greenpeace', category:'Motion + VFX', year:'2023', format:'4K' },
+  const placeholderStudio = [
+    { _id:'p1', title:'Eclipse VFX',      client:'Canal+',     category:'Visual Effects',  year:'2024', format:'4K HDR' },
+    { _id:'p2', title:'Songe d\'une Nuit', client:'Arte',       category:'Color Grading',   year:'2024', format:'DCP' },
+    { _id:'p3', title:'Urban Decay',      client:'Nike',       category:'Motion Design',   year:'2023', format:'Social / OOH' },
+    { _id:'p4', title:'Fractures',        client:'Netflix',    category:'Post-Production', year:'2024', format:'Dolby Vision' },
+    { _id:'p5', title:'Lumière Noire',    client:'Dior',       category:'Comp & VFX',      year:'2023', format:'4K' },
+    { _id:'p6', title:'Territories',      client:'Arte/ZDF',   category:'Grade & Sound',   year:'2024', format:'HDR10+' },
+    { _id:'p7', title:'Deep Blue',        client:'Greenpeace', category:'Motion + VFX',    year:'2023', format:'4K' },
   ]
+  // Merge: real Sanity projects first, then fill remaining slots with placeholders up to 7
+  const studioList = [
+    ...studioProjects,
+    ...placeholderStudio.slice(studioProjects.length)
+  ].slice(0, 7)
 
   const prodList = productions.length > 0 ? productions : [
     { _id:'1', title:'La Chute du Verbe', director:'Camille Roux', genre:'Drama', year:'2024', status:'dev', festivals:['Cannes L.C.','ACID 2025'] },
@@ -319,7 +324,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
         .ct-input,.ct-textarea{font-family:var(--M);font-size:13px;letter-spacing:.05em;color:var(--w);background:none;border:none;outline:none;padding:.3rem 0;width:100%;resize:none;caret-color:var(--gold)}
         .ct-input::placeholder,.ct-textarea::placeholder{color:var(--muted)}
         .ct-textarea{min-height:120px}
-        .ct-submit{display:inline-flex;align-items:center;gap:1rem;margin-top:2.5rem;font-family:var(--M);font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--k);background:var(--gold);border:none;cursor:none;padding:1rem 2rem;transition:background .3s,gap .3s}
+        .ct-submit{display:inline-flex;align-items:center;gap:1rem;margin-top:2.5rem;font-family:var(--M);font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--k);background:var(--gold);border:none;cursor:none;padding:1rem 2rem;transition:background .3s,gap .3s;width:auto;align-self:flex-start}
         .ct-submit:hover{background:var(--cream);gap:1.4rem}
         .ct-sent{display:none;font-family:var(--M);font-size:12px;letter-spacing:.15em;margin-top:1.5rem}
         .ct-info-tag{font-family:var(--M);font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
