@@ -288,8 +288,8 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     .ab-client{background:var(--k);font-family:var(--D);font-weight:700;font-size:clamp(11px,1vw,14px);letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:1.6rem 1.2rem;transition:color .4s,background .4s;cursor:none;text-align:center}
     .ab-client:hover{color:var(--w);background:#080808}
     .ab-team{padding:5rem 5vw;border-bottom:1px solid rgba(255,255,255,.06)}
-    .ab-team-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:2.5rem 3rem;align-items:start}
-    .ab-member{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:none;width:clamp(90px,13vw,160px)}
+    .ab-team-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:3rem 4vw;align-items:start}
+    .ab-member{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:none;width:clamp(140px,15vw,200px)}
     .ab-member-photo-wrap{width:clamp(90px,9vw,130px);height:clamp(90px,9vw,130px);border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.08);flex-shrink:0;transition:border-color .4s;position:relative;background:#0d0d0d}
     .ab-member:hover .ab-member-photo-wrap{border-color:var(--gold)}
     .ab-member-photo{width:100%;height:100%;object-fit:cover;border-radius:50%}
