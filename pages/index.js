@@ -288,13 +288,14 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     .ab-client{background:var(--k);font-family:var(--D);font-weight:700;font-size:clamp(11px,1vw,14px);letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:1.6rem 1.2rem;transition:color .4s,background .4s;cursor:none;text-align:center}
     .ab-client:hover{color:var(--w);background:#080808}
     .ab-team{padding:5rem 5vw;border-bottom:1px solid rgba(255,255,255,.06)}
-    .ab-team-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:2.5rem;align-items:start;justify-items:center}
-    .ab-member{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:none;width:100%}
-    .ab-member-photo-wrap{width:clamp(90px,9vw,130px);height:clamp(90px,9vw,130px);border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.08);flex-shrink:0;transition:border-color .4s;position:relative}
+    .ab-team-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:2.5rem 3rem;align-items:start}
+    .ab-member{display:flex;flex-direction:column;align-items:center;text-align:center;cursor:none;width:clamp(90px,13vw,160px)}
+    .ab-member-photo-wrap{width:clamp(90px,9vw,130px);height:clamp(90px,9vw,130px);border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.08);flex-shrink:0;transition:border-color .4s;position:relative;background:#0d0d0d}
     .ab-member:hover .ab-member-photo-wrap{border-color:var(--gold)}
-    .ab-member-photo{width:100%;height:100%;background:#0d0d0d;display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.76,0,.24,1);position:absolute;inset:0}
-    .ab-member:hover .ab-member-photo{transform:scale(1.08)}
-    .ab-member-photo::after{content:'+';font-family:var(--M);font-size:20px;color:rgba(255,255,255,.12);font-weight:300}
+    .ab-member-photo{width:100%;height:100%;object-fit:cover;border-radius:50%}
+    .ab-member-photo-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.76,0,.24,1)}
+    .ab-member:hover .ab-member-photo-placeholder{transform:scale(1.08)}
+    .ab-member-photo-placeholder::after{content:'+';font-family:var(--M);font-size:20px;color:rgba(255,255,255,.12);font-weight:300}
     .ab-member-name{font-family:var(--D);font-weight:600;font-size:clamp(11px,1vw,13px);letter-spacing:-.005em;text-transform:uppercase;color:var(--w);margin-top:1rem;line-height:1.2;transition:color .3s}
     .ab-member:hover .ab-member-name{color:var(--cream)}
     .ab-member-role{font-family:var(--M);font-size:10px;letter-spacing:.18em;color:var(--gold);margin-top:.35rem;text-transform:uppercase;line-height:1.5}
@@ -572,9 +573,10 @@ export default function Home({ studioProjects, productions, teamMembers, clients
               {teamList.map(m => (
                 <div key={m._id} className="ab-member">
                   <div className="ab-member-photo-wrap">
-                    <div className="ab-member-photo">
-                      {m.photo && <img src={m.photo} alt={m.name} style={{width:'100%',height:'100%',objectFit:'cover'}}/>}
-                    </div>
+                    {m.photo
+                      ? <img className="ab-member-photo" src={m.photo} alt={m.name} />
+                      : <div className="ab-member-photo-placeholder" />
+                    }
                   </div>
                   <div className="ab-member-name">{m.name}</div>
                   <div className="ab-member-role">{m.role}</div>
