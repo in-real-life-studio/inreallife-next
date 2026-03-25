@@ -41,15 +41,33 @@ export async function getStaticProps() {
     }
   `)
 
+  const siteSettings = await client.fetch(`
+    *[_type == "siteSettings" && _id == "siteSettings"][0] {
+      introLine1, introLine2,
+      gatewayStudioTag, gatewayStudioTitle1, gatewayStudioTitle2, gatewayStudioSub,
+      gatewayProdTag, gatewayProdTitle1, gatewayProdTitle2, gatewayProdSub,
+      aboutManifestoLead, aboutManifestoBody1, aboutManifestoBody2,
+      aboutClosingLine1, aboutClosingLine2,
+      contactHeadquartersName, contactHeadquartersAddress,
+      contactStudioName, contactStudioAddress,
+      contactEmail, contactInstagram, contactLinkedin, contactFramerate,
+      legalEntity1Name, legalEntity1Siret, legalEntity1Rcs, legalEntity1Capital, legalEntity1Vat,
+      legalEntity2Name, legalEntity2Siret, legalEntity2Rcs, legalEntity2Capital, legalEntity2Vat,
+      legalEntity3Name, legalEntity3Siret, legalEntity3Rcs, legalEntity3Capital, legalEntity3Vat, legalEntity3Address,
+      footerCopyright,
+    }
+  `) || {}
+
   return {
-    props: { studioProjects, productions, teamMembers, clients, showreels, expertise },
+    props: { studioProjects, productions, teamMembers, clients, showreels, expertise, siteSettings },
     revalidate: 30
   }
 }
 
 const statusLabel = { released: 'Released', post: 'Post-Production', dev: 'In Development' }
 
-export default function Home({ studioProjects, productions, teamMembers, clients, showreels, expertise }) {
+export default function Home({ studioProjects, productions, teamMembers, clients, showreels, expertise, siteSettings }) {
+  const s = siteSettings || {}
   const [page, setPage] = useState('gateway')
   const [intro, setIntro] = useState(true)
   const [modal, setModal] = useState(null)
@@ -454,8 +472,8 @@ export default function Home({ studioProjects, productions, teamMembers, clients
         <img src="/LOGO_IRL_WHITE.png" alt="IRL" className="intro-logo" />
         <div className="intro-sep" />
         <div className="intro-tagline">
-          <span className="intro-line1">We are In Real Life.</span>
-          <span className="intro-line2">House of Possibilities.</span>
+          <span className="intro-line1">{s.introLine1 || 'We are In Real Life.'}</span>
+          <span className="intro-line2">{s.introLine2 || 'House of Possibilities.'}</span>
         </div>
       </div>
 
@@ -501,9 +519,9 @@ export default function Home({ studioProjects, productions, teamMembers, clients
             <div className="gw-idx">01</div>
             <img src="/LOGO_IRL_WHITE.png" alt="" className="gw-mark" />
             <div className="gw-content">
-              <div className="gw-tag">Post-Production · Creative</div>
-              <div className="gw-title"><div>In Real Life</div><div>Studio</div></div>
-              <div className="gw-sub">VFX · Color · Motion · Sound</div>
+              <div className="gw-tag">{s.gatewayStudioTag || 'Post-Production · Creative'}</div>
+              <div className="gw-title"><div>{s.gatewayStudioTitle1 || 'In Real Life'}</div><div>{s.gatewayStudioTitle2 || 'Studio'}</div></div>
+              <div className="gw-sub">{s.gatewayStudioSub || 'VFX · Color · Motion · Sound'}</div>
               <div className="gw-cta"><span className="gw-cta-line"/>Discover</div>
             </div>
           </div>
@@ -515,9 +533,9 @@ export default function Home({ studioProjects, productions, teamMembers, clients
             <div className="gw-idx" style={{left:'auto',right:'4.5vw'}}>02</div>
             <img src="/LOGO_IRL_WHITE.png" alt="" className="gw-mark" />
             <div className="gw-content">
-              <div className="gw-tag">Fiction Films</div>
-              <div className="gw-title"><div>In Real Life</div><div>Productions</div></div>
-              <div className="gw-sub">Feature · Short · Series · Doc</div>
+              <div className="gw-tag">{s.gatewayProdTag || 'Fiction Films'}</div>
+              <div className="gw-title"><div>{s.gatewayProdTitle1 || 'In Real Life'}</div><div>{s.gatewayProdTitle2 || 'Productions'}</div></div>
+              <div className="gw-sub">{s.gatewayProdSub || 'Feature · Short · Series · Doc'}</div>
               <div className="gw-cta"><span className="gw-cta-line"/>Discover</div>
             </div>
           </div>
@@ -601,11 +619,11 @@ export default function Home({ studioProjects, productions, teamMembers, clients
           <div className="ab-manifesto">
             <div>
               <div className="ab-tag"><span></span>Who We Are</div>
-              <p className="ab-lead">We are <em>In Real Life</em> — a creative studio built at the intersection of storytelling, technology, and craft.</p>
+              <p className="ab-lead">We are <em>In Real Life</em> — {(s.aboutManifestoLead || 'We are In Real Life — a creative studio built at the intersection of storytelling, technology, and craft.').replace('We are In Real Life — ', '')}</p>
             </div>
             <div style={{paddingTop:'.5rem'}}>
-              <p className="ab-body">Born in Paris, operating worldwide. We don&apos;t just make films. We build worlds, shape narratives, and push images further than they&apos;ve been before. From the first spark of an idea to the final frame, we carry projects through every stage — creative direction, production, post-production, and beyond.</p>
-              <p className="ab-body">We work with agencies, production companies, and brands that believe in the power of a strong image. Our team brings together directors, producers, VFX artists, colorists, motion designers, and AI specialists — united by a single obsession: making something that lasts.</p>
+              <p className="ab-body">{s.aboutManifestoBody1 || "Born in Paris, operating worldwide. We don't just make films. We build worlds, shape narratives, and push images further than they've been before. From the first spark of an idea to the final frame, we carry projects through every stage — creative direction, production, post-production, and beyond."}</p>
+              <p className="ab-body">{s.aboutManifestoBody2 || "We work with agencies, production companies, and brands that believe in the power of a strong image. Our team brings together directors, producers, VFX artists, colorists, motion designers, and AI specialists — united by a single obsession: making something that lasts."}</p>
             </div>
           </div>
           <div className="ab-reels">
@@ -687,16 +705,16 @@ export default function Home({ studioProjects, productions, teamMembers, clients
             <img src="/LOGO_IRL_WHITE.png" alt="IRL" className="ab-closing-logo"/>
             <div className="ab-closing-sep"/>
             <div>
-              <span className="ab-closing-line1">We are In Real Life.</span>
-              <span className="ab-closing-line2">House of Possibilities.</span>
+              <span className="ab-closing-line1">{s.aboutClosingLine1 || 'We are In Real Life.'}</span>
+              <span className="ab-closing-line2">{s.aboutClosingLine2 || 'House of Possibilities.'}</span>
             </div>
           </div>
           <Footer setPage={setPage} />
         </div>
       )}
 
-      {page === 'contact' && <ContactPage setPage={setPage} />}
-      {page === 'legal' && <LegalPage setPage={setPage} />}
+      {page === 'contact' && <ContactPage setPage={setPage} s={s} />}
+      {page === 'legal' && <LegalPage setPage={setPage} s={s} />}
 
       {modal && (
         <div className="modal-backdrop" onClick={closeModal}>
@@ -717,20 +735,20 @@ export default function Home({ studioProjects, productions, teamMembers, clients
   )
 }
 
-function Footer({ setPage }) {
+function Footer({ setPage, s = {} }) {
   return (
     <footer>
-      <div className="ft-l">© 2025 In Real Life — Paris</div>
+      <div className="ft-l">{s.footerCopyright || '© 2025 In Real Life — Paris'}</div>
       <div className="ft-r">
         <button className="ft-a" onClick={() => setPage('contact')}>Contact</button>
-        <button className="ft-a" onClick={() => window.open('https://www.instagram.com/in.real.life_studio/','_blank')}>Instagram</button>
+        <button className="ft-a" onClick={() => window.open(s.contactInstagram || 'https://www.instagram.com/in.real.life_studio/','_blank')}>Instagram</button>
         <button className="ft-a" onClick={() => setPage('legal')}>Legal</button>
       </div>
     </footer>
   )
 }
 
-function ContactPage({ setPage }) {
+function ContactPage({ setPage, s = {} }) {
   const [status, setStatus] = useState(null)
 
   async function handleSubmit(e) {
@@ -773,15 +791,15 @@ function ContactPage({ setPage }) {
         </div>
         <div className="ct-right">
           <div style={{display:'flex',flexDirection:'column',gap:'2.5rem'}}>
-            <div><div className="ct-info-tag">Registered Office</div><div className="ct-address"><strong>WE ARE IRL</strong>149 Avenue du Maine<br/>75014 Paris, France</div></div>
-            <div><div className="ct-info-tag">Studio</div><div className="ct-address"><strong>In Real Life Studio</strong>70 Rue Jean Bleuzen<br/>92170 Vanves, France</div></div>
-            <div><div className="ct-info-tag">General Enquiries</div><div className="ct-address">pierre@weareirl.com</div></div>
+            <div><div className="ct-info-tag">Registered Office</div><div className="ct-address"><strong>{s.contactHeadquartersName || 'WE ARE IRL'}</strong>{s.contactHeadquartersAddress || '149 Avenue du Maine, 75014 Paris, France'}</div></div>
+            <div><div className="ct-info-tag">Studio</div><div className="ct-address"><strong>{s.contactStudioName || 'In Real Life Studio'}</strong>{s.contactStudioAddress || '70 Rue Jean Bleuzen, 92170 Vanves, France'}</div></div>
+            <div><div className="ct-info-tag">General Enquiries</div><div className="ct-address">{s.contactEmail || 'pierre@weareirl.com'}</div></div>
             <div>
               <div className="ct-info-tag">Follow Us</div>
               <div className="ct-socials">
-                <a className="ct-social" href="https://www.instagram.com/in.real.life_studio/" target="_blank" rel="noreferrer"><span className="ct-social-line"/>Instagram</a>
-                <a className="ct-social" href="https://www.linkedin.com/company/in-real-life-studio/" target="_blank" rel="noreferrer"><span className="ct-social-line"/>LinkedIn</a>
-                <a className="ct-social" href="https://framerate.tv/profile/weareirl" target="_blank" rel="noreferrer"><span className="ct-social-line"/>FrameRate</a>
+                {(s.contactInstagram || 'https://www.instagram.com/in.real.life_studio/') && <a className="ct-social" href={s.contactInstagram || 'https://www.instagram.com/in.real.life_studio/'} target="_blank" rel="noreferrer"><span className="ct-social-line"/>Instagram</a>}
+                {(s.contactLinkedin || 'https://www.linkedin.com/company/in-real-life-studio/') && <a className="ct-social" href={s.contactLinkedin || 'https://www.linkedin.com/company/in-real-life-studio/'} target="_blank" rel="noreferrer"><span className="ct-social-line"/>LinkedIn</a>}
+                {(s.contactFramerate || 'https://framerate.tv/profile/weareirl') && <a className="ct-social" href={s.contactFramerate || 'https://framerate.tv/profile/weareirl'} target="_blank" rel="noreferrer"><span className="ct-social-line"/>FrameRate</a>}
               </div>
             </div>
           </div>
@@ -792,17 +810,46 @@ function ContactPage({ setPage }) {
   )
 }
 
-function LegalPage({ setPage }) {
+function LegalPage({ setPage, s = {} }) {
+  const e1 = s.legalEntity1Name || 'WE ARE IRL'
+  const e2 = s.legalEntity2Name || 'In Real Life Studio'
+  const e3 = s.legalEntity3Name || 'In Real Life Productions'
   return (
     <div className="screen active page">
       <div style={{height:'3.5rem'}}/>
       <div className="s-head"><div className="s-title">Legal</div><div className="s-meta"><div><b>Legal Notice</b></div><div>France</div></div></div>
       <div className="lg-wrap">
         {[
-          { tag:'Parent Company', title:'WE ARE IRL', rows:[['Legal form','SAS — Simplified Joint Stock Company'],['Registered office','149 Avenue du Maine, 75014 Paris, France'],['SIRET','[XXX XXX XXX XXXXX]'],['RCS','Paris [B XXX XXX XXX]'],['VAT number','FR [XX XXX XXX XXX]'],['Share capital','[XX 000] €'],['Publication Director','Pierre-Joseph Secondi'],['Contact','pierre@weareirl.com']] },
-          { tag:'Subsidiary — Post-Production & Creative', title:'In Real Life Studio', rows:[['Legal form','SAS — Simplified Joint Stock Company'],['Registered office','70 Rue Jean Bleuzen, 92170 Vanves, France'],['SIRET','[XXX XXX XXX XXXXX]'],['RCS','Paris [B XXX XXX XXX]'],['Share capital','[XX 000] €'],['VAT number','FR [XX XXX XXX XXX]']] },
-          { tag:'Subsidiary — Fiction Films', title:'In Real Life Productions', rows:[['Legal form','SAS — Simplified Joint Stock Company'],['Registered office','[Full address — to be completed]'],['SIRET','[XXX XXX XXX XXXXX]'],['RCS','Paris [B XXX XXX XXX]'],['Share capital','[XX 000] €'],['VAT number','FR [XX XXX XXX XXX]']] },
-          { tag:'Website Hosting', title:'Vercel Inc.', rows:[['Address','340 S Lemon Ave #4133, Walnut, CA 91789, United States'],['Website','vercel.com']] },
+          { tag:'Parent Company', title: e1, rows:[
+            ['Legal form','SAS — Simplified Joint Stock Company'],
+            ['Registered office', s.contactHeadquartersAddress || '149 Avenue du Maine, 75014 Paris, France'],
+            ['SIRET', s.legalEntity1Siret || '[XXX XXX XXX XXXXX]'],
+            ['RCS', s.legalEntity1Rcs || 'Paris [B XXX XXX XXX]'],
+            ['VAT number', s.legalEntity1Vat || 'FR [XX XXX XXX XXX]'],
+            ['Share capital', s.legalEntity1Capital || '[XX 000] €'],
+            ['Publication Director','Pierre-Joseph Secondi'],
+            ['Contact', s.contactEmail || 'pierre@weareirl.com'],
+          ]},
+          { tag:'Subsidiary — Post-Production & Creative', title: e2, rows:[
+            ['Legal form','SAS — Simplified Joint Stock Company'],
+            ['Registered office', s.contactStudioAddress || '70 Rue Jean Bleuzen, 92170 Vanves, France'],
+            ['SIRET', s.legalEntity2Siret || '[XXX XXX XXX XXXXX]'],
+            ['RCS', s.legalEntity2Rcs || 'Paris [B XXX XXX XXX]'],
+            ['Share capital', s.legalEntity2Capital || '[XX 000] €'],
+            ['VAT number', s.legalEntity2Vat || 'FR [XX XXX XXX XXX]'],
+          ]},
+          { tag:'Subsidiary — Fiction Films', title: e3, rows:[
+            ['Legal form','SAS — Simplified Joint Stock Company'],
+            ['Registered office', s.legalEntity3Address || '[Full address — to be completed]'],
+            ['SIRET', s.legalEntity3Siret || '[XXX XXX XXX XXXXX]'],
+            ['RCS', s.legalEntity3Rcs || 'Paris [B XXX XXX XXX]'],
+            ['Share capital', s.legalEntity3Capital || '[XX 000] €'],
+            ['VAT number', s.legalEntity3Vat || 'FR [XX XXX XXX XXX]'],
+          ]},
+          { tag:'Website Hosting', title:'Vercel Inc.', rows:[
+            ['Address','340 S Lemon Ave #4133, Walnut, CA 91789, United States'],
+            ['Website','vercel.com'],
+          ]},
         ].map((b,i) => (
           <div key={i}>
             <div className="lg-block">
@@ -815,11 +862,11 @@ function LegalPage({ setPage }) {
         ))}
         <div className="lg-block"><div className="lg-block-tag">Intellectual Property</div><div className="lg-block-title">All Rights Reserved</div><p className="lg-text">All content on this website is the exclusive property of WE ARE IRL, In Real Life Studio and In Real Life Productions, protected under French and international intellectual property laws. Any reproduction without prior written authorisation is strictly prohibited.</p></div>
         <div className="lg-sep"/>
-        <div className="lg-block"><div className="lg-block-tag">Personal Data</div><div className="lg-block-title">Privacy Policy</div><p className="lg-text">This website does not collect personal data for commercial purposes. In accordance with the GDPR, you have the right to access, rectify and delete your data. Contact: <span style={{color:'var(--gold)'}}>pierre@weareirl.com</span></p></div>
+        <div className="lg-block"><div className="lg-block-tag">Personal Data</div><div className="lg-block-title">Privacy Policy</div><p className="lg-text">This website does not collect personal data for commercial purposes. In accordance with the GDPR, you have the right to access, rectify and delete your data. Contact: <span style={{color:'var(--gold)'}}>{s.contactEmail || 'pierre@weareirl.com'}</span></p></div>
         <div className="lg-sep"/>
         <div className="lg-block"><div className="lg-block-tag">Cookies</div><div className="lg-block-title">Cookie Policy</div><p className="lg-text">This website does not use tracking or advertising cookies. No data is transmitted to third parties for advertising purposes.</p></div>
       </div>
-      <Footer setPage={setPage} />
+      <Footer setPage={setPage} s={s} />
     </div>
   )
 }
