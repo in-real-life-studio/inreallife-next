@@ -5,14 +5,14 @@ import { useEffect, useRef, useState } from 'react'
 export async function getStaticProps() {
   const studioProjects = await client.fetch(`
     *[_type == "studioProject"] | order(order asc) {
-      _id, title, client, categories, category, year, format,
+      _id, title, client, categories, category, year, format, tileFormat,
       "thumbnail": thumbnail.asset->url,
       videoLoopUrl, featured
     }
   `)
   const productions = await client.fetch(`
     *[_type == "production"] | order(order asc) {
-      _id, title, director, genre, year, status, festivals,
+      _id, title, director, genre, year, status, festivals, tileFormat,
       "poster": poster.asset->url,
       thumbnailColor, videoUrl
     }
@@ -219,15 +219,17 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     .s-title{font-family:var(--D);font-weight:700;text-transform:uppercase;font-size:clamp(64px,10vw,148px);letter-spacing:-.05em;line-height:.82}
     .s-meta{font-family:var(--M);font-size:12px;letter-spacing:.2em;color:var(--muted);text-align:right;line-height:2.2}
     .s-meta b{font-weight:400;color:var(--gold)}
-    .sg{padding:3px;display:grid;gap:3px;grid-template-columns:repeat(12,1fr);background:rgba(255,255,255,.03)}
+    .sg{padding:3px;display:grid;gap:3px;grid-template-columns:repeat(12,1fr);grid-auto-rows:22vw;grid-auto-flow:row dense;background:rgba(255,255,255,.03)}
     .sg-item{background:var(--k);position:relative;overflow:hidden;cursor:none}
-    .sg-item:nth-child(4n+1){grid-column:span 7}
-    .sg-item:nth-child(4n+2){grid-column:span 5}
-    .sg-item:nth-child(4n+3){grid-column:span 5}
-    .sg-item:nth-child(4n+4){grid-column:span 7}
-    .sg-item:last-child:nth-child(odd){grid-column:span 12}
-    .sg-thumb{aspect-ratio:16/7;width:100%;position:relative;overflow:hidden;background:#060606}
-    .sg-item:nth-child(4n+2) .sg-thumb,.sg-item:nth-child(4n+3) .sg-thumb{aspect-ratio:4/5}
+    .sg-item.fmt-tall{grid-column:span 4;grid-row:span 2}
+    .sg-item.fmt-wide{grid-column:span 5}
+    .sg-item.fmt-std{grid-column:span 3}
+    .sg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+1){grid-column:span 4;grid-row:span 2}
+    .sg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+2){grid-column:span 5}
+    .sg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+3){grid-column:span 3}
+    .sg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+4){grid-column:span 5}
+    .sg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+5){grid-column:span 3}
+    .sg-thumb{position:absolute;inset:0;overflow:hidden;background:#060606}
     .sg-bg{position:absolute;inset:0;transition:transform .9s cubic-bezier(.76,0,.24,1)}
     .sg-item:hover .sg-bg{transform:scale(1.04)}
     .sg-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,transparent 55%);opacity:0;transition:opacity .5s}
@@ -238,15 +240,17 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     .sg-name{font-family:var(--D);font-weight:600;font-size:clamp(14px,1.8vw,24px);letter-spacing:-.02em;text-transform:uppercase}
     .sg-cl{font-family:var(--M);font-size:11px;letter-spacing:.15em;color:var(--cream);opacity:.4;margin-top:.25rem}
     .sg-n{position:absolute;top:1rem;right:1.1rem;font-family:var(--M);font-size:11px;letter-spacing:.15em;color:rgba(255,255,255,.2);z-index:3}
-    .pg{padding:3px;display:grid;gap:3px;grid-template-columns:repeat(12,1fr);background:rgba(255,255,255,.03)}
+    .pg{padding:3px;display:grid;gap:3px;grid-template-columns:repeat(12,1fr);grid-auto-rows:22vw;grid-auto-flow:row dense;background:rgba(255,255,255,.03)}
     .pg-item{background:var(--k);position:relative;overflow:hidden;cursor:none}
-    .pg-item:nth-child(4n+1){grid-column:span 5}
-    .pg-item:nth-child(4n+2){grid-column:span 7}
-    .pg-item:nth-child(4n+3){grid-column:span 7}
-    .pg-item:nth-child(4n+4){grid-column:span 5}
-    .pg-item:last-child:nth-child(odd){grid-column:span 12}
-    .pg-thumb{aspect-ratio:16/7;width:100%;position:relative;overflow:hidden;background:#060606}
-    .pg-item:nth-child(4n+1) .pg-thumb,.pg-item:nth-child(4n+4) .pg-thumb{aspect-ratio:4/5}
+    .pg-item.fmt-tall{grid-column:span 4;grid-row:span 2}
+    .pg-item.fmt-wide{grid-column:span 5}
+    .pg-item.fmt-std{grid-column:span 3}
+    .pg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+1){grid-column:span 4;grid-row:span 2}
+    .pg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+2){grid-column:span 5}
+    .pg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+3){grid-column:span 3}
+    .pg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+4){grid-column:span 5}
+    .pg-item:not(.fmt-tall):not(.fmt-wide):not(.fmt-std):nth-child(5n+5){grid-column:span 3}
+    .pg-thumb{position:absolute;inset:0;overflow:hidden;background:#060606}
     .pg-bg{position:absolute;inset:0;transition:transform .9s cubic-bezier(.76,0,.24,1)}
     .pg-item:hover .pg-bg{transform:scale(1.04)}
     .pg-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,transparent 55%);opacity:0;transition:opacity .5s}
@@ -522,11 +526,11 @@ export default function Home({ studioProjects, productions, teamMembers, clients
           </div>
           <div className="sg">
             {studioList.map((p,i) => (
-              <div key={p._id} className="sg-item" data-hover onClick={() => openModal(p.videoLoopUrl, p.title)}>
+              <div key={p._id} className={`sg-item${p.tileFormat ? ' fmt-'+p.tileFormat : ''}`} data-hover onClick={() => openModal(p.videoLoopUrl, p.title)}>
                 <div className="sg-thumb">
                   {p.thumbnail
                     ? <img src={p.thumbnail} alt={p.title} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
-                    : <div className="sg-bg" style={{background:`linear-gradient(${120+i*28}deg,rgb(${hues[i%hues.length]}) 0%,#050505 100%)`}}/>
+                    : <div className="sg-bg" style={{position:'absolute',inset:0,background:`linear-gradient(${120+i*28}deg,rgb(${hues[i%hues.length]}) 0%,#050505 100%)`}}/>
                   }
                   <div className="sg-ov"/>
                   <div className="sg-n">0{i+1}</div>
@@ -552,11 +556,11 @@ export default function Home({ studioProjects, productions, teamMembers, clients
           </div>
           <div className="pg">
             {prodList.map((p,i) => (
-              <div key={p._id} className="pg-item" data-hover onClick={() => openModal(p.videoUrl, p.title)}>
+              <div key={p._id} className={`pg-item${p.tileFormat ? ' fmt-'+p.tileFormat : ''}`} data-hover onClick={() => openModal(p.videoUrl, p.title)}>
                 <div className="pg-thumb">
                   {p.poster
                     ? <img src={p.poster} alt={p.title} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
-                    : <div className="pg-bg" style={{background:`linear-gradient(${155+i*22}deg,rgb(${p.thumbnailColor || phues[i%phues.length]}) 0%,#040404 100%)`}}/>
+                    : <div className="pg-bg" style={{position:'absolute',inset:0,background:`linear-gradient(${155+i*22}deg,rgb(${p.thumbnailColor || phues[i%phues.length]}) 0%,#040404 100%)`}}/>
                   }
                   <div className="pg-ov"/>
                   <div className="pg-n">0{i+1}</div>
