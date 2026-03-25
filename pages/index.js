@@ -416,9 +416,12 @@ export default function Home({ studioProjects, productions, teamMembers, clients
       .s-head{padding:5rem 5vw 2rem;flex-direction:column;gap:1rem;align-items:flex-start}
       .s-meta{text-align:left}
       .s-title{font-size:clamp(48px,12vw,80px)}
-      .sg,.pg{grid-template-columns:1fr;gap:2px;padding:2px}
-      .sg-item,.pg-item{grid-column:1/-1!important}
-      .sg-thumb,.pg-thumb{aspect-ratio:16/9!important}
+      .sg{display:flex;flex-direction:column;gap:2px;padding:2px;background:rgba(255,255,255,.03)}
+      .sg-item{grid-column:unset!important;grid-row:unset!important;width:100%}
+      .sg-thumb{position:relative;aspect-ratio:16/9;height:auto}
+      .pg{display:flex;flex-direction:column;gap:2px;padding:2px;background:rgba(255,255,255,.03)}
+      .pg-item{grid-column:unset!important;grid-row:unset!important;width:100%}
+      .pg-thumb{position:relative;aspect-ratio:16/9;height:auto}
       .sg-info,.pg-info{opacity:1!important;transform:none!important}
       .sg-ov,.pg-ov{opacity:1!important}
       .ab-manifesto{grid-template-columns:1fr;gap:2rem;padding:3rem 5vw}
