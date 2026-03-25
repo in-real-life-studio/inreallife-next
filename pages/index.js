@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 export async function getStaticProps() {
   const studioProjects = await client.fetch(`
     *[_type == "studioProject"] | order(order asc) {
-      _id, title, client, category, year, format,
+      _id, title, client, categories, category, year, format,
       "thumbnail": thumbnail.asset->url,
       videoLoopUrl, featured
     }
@@ -14,7 +14,7 @@ export async function getStaticProps() {
     *[_type == "production"] | order(order asc) {
       _id, title, director, genre, year, status, festivals,
       "poster": poster.asset->url,
-      thumbnailColor
+      thumbnailColor, videoUrl
     }
   `)
   const teamMembers = await client.fetch(`
@@ -36,7 +36,8 @@ export async function getStaticProps() {
   `)
   const expertise = await client.fetch(`
     *[_type == "expertise"] | order(order asc) {
-      _id, number, title, description
+      _id, number, title, description,
+      "image": image.asset->url
     }
   `)
 
@@ -105,7 +106,9 @@ export default function Home({ studioProjects, productions, teamMembers, clients
     { _id:'p6', title:'Territories', client:'Arte/ZDF', category:'Grade & Sound', year:'2024', format:'HDR10+' },
     { _id:'p7', title:'Deep Blue', client:'Greenpeace', category:'Motion + VFX', year:'2023', format:'4K' },
   ]
-  const studioList = [...studioProjects, ...placeholderStudio.slice(studioProjects.length)].slice(0, 7)
+  const studioList = studioProjects.length >= 7
+    ? studioProjects
+    : [...studioProjects, ...placeholderStudio.slice(studioProjects.length)]
 
   const prodList = productions.length > 0 ? productions : [
     { _id:'1', title:'La Chute du Verbe', director:'Camille Roux', genre:'Drama', year:'2024', status:'dev', festivals:['Cannes L.C.','ACID 2025'] },
@@ -522,7 +525,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
                   <div className="sg-ov"/>
                   <div className="sg-n">0{i+1}</div>
                   <div className="sg-info">
-                    <div className="sg-cat">{p.category}</div>
+                    <div className="sg-cat">{Array.isArray(p.categories) ? p.categories.join(' · ') : p.category}</div>
                     <div className="sg-name">{p.title}</div>
                     <div className="sg-cl">{p.client} · {p.year}{p.format ? ` · ${p.format}` : ''}</div>
                   </div>
@@ -543,7 +546,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
           </div>
           <div className="pg">
             {prodList.map((p,i) => (
-              <div key={p._id} className="pg-item" data-hover>
+              <div key={p._id} className="pg-item" data-hover onClick={() => openModal(p.videoUrl, p.title)}>
                 <div className="pg-thumb">
                   {p.poster
                     ? <img src={p.poster} alt={p.title} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
@@ -558,6 +561,7 @@ export default function Home({ studioProjects, productions, teamMembers, clients
                     {p.festivals?.length > 0 && (
                       <div className="pg-fests">{p.festivals.map(f => <span key={f} className="pg-fest">{f}</span>)}</div>
                     )}
+                    {p.videoUrl && <div style={{marginTop:'.5rem',fontFamily:'var(--M)',fontSize:'10px',letterSpacing:'.2em',color:'var(--gold)',textTransform:'uppercase'}}>▶ Watch</div>}
                   </div>
                 </div>
               </div>
@@ -608,7 +612,12 @@ export default function Home({ studioProjects, productions, teamMembers, clients
             <div className="ab-services-grid">
               {expertiseList.map(s => (
                 <div key={s._id} className="ab-service">
-                  <div className="ab-service-img"><div className="ab-service-img-inner"><span className="ab-service-img-label">Image</span></div></div>
+                  <div className="ab-service-img">
+                    {s.image
+                      ? <img src={s.image} alt={s.title} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} />
+                      : <div className="ab-service-img-inner"><span className="ab-service-img-label">Image</span></div>
+                    }
+                  </div>
                   <div className="ab-service-body">
                     <div className="ab-service-num">{s.number}</div>
                     <div className="ab-service-title">{s.title}</div>
