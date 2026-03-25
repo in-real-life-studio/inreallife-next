@@ -4,27 +4,27 @@ import { useEffect, useRef, useState } from 'react'
 
 export async function getStaticProps() {
   const studioProjects = await client.fetch(`
-    *[_type == "studioProject"] | order(order asc) {
+    *[_type == "studioProject"] | order(orderRank) {
       _id, title, client, categories, category, year, format, tileFormat,
       "thumbnail": thumbnail.asset->url,
       videoLoopUrl, featured
     }
   `)
   const productions = await client.fetch(`
-    *[_type == "production"] | order(order asc) {
+    *[_type == "production"] | order(orderRank) {
       _id, title, director, genre, year, status, festivals, tileFormat,
       "poster": poster.asset->url,
       thumbnailColor, videoUrl
     }
   `)
   const teamMembers = await client.fetch(`
-    *[_type == "teamMember"] | order(order asc) {
+    *[_type == "teamMember"] | order(orderRank) {
       _id, name, role, email,
       "photo": photo.asset->url
     }
   `)
   const clients = await client.fetch(`
-    *[_type == "client"] | order(order asc) {
+    *[_type == "client"] | order(orderRank) {
       _id, name, type,
       "logo": logo.asset->url
     }
@@ -35,7 +35,7 @@ export async function getStaticProps() {
     }
   `)
   const expertise = await client.fetch(`
-    *[_type == "expertise"] | order(order asc) {
+    *[_type == "expertise"] | order(orderRank) {
       _id, number, title, description,
       "image": image.asset->url
     }
